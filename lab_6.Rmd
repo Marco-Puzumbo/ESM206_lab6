@@ -61,5 +61,51 @@ mwu <- wilcox.test(gp_1, gp_2)
 This p-value means that IF our samples are drawn from populations with the same median (i.e. if the null hypothesis is true), there is `r round(mwu$p.value,2)` probability of finding sample medians *at least as different* as mine by random chance.
 
 No significant difference in medians (Mann-Whitney U; U = `r mwu$statistic` p = `r round(mwu$p.value,2)`)
+
+## Simple linear regression
+
+Two *continuous variables* that you are trying to understand the relationship between and you think that a linear relationship makes sense.
+
+Use the `pengins` data from {pamerpenguiuns}, exploring flipper length (x) versus body  mass (y)
+
+```{r}
+ggplot(data = penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point() +
+  geom_smooth(method = 'lm')
+  
+
+```
+
+### find the model estimates (coefficients)
+
+Use the `lm` function for linear model.
+
+```{r}
+penguins_lm <- lm(body_mass_g ~ flipper_length_mm, data = penguins)
+```
+
+Model coefficients: `r penguins_lm$coefficients`
+Flipper length coefficient: `r penguins_lm$coefficients[2]`
+
+### Use `broomLLtidy()` to get a tidy output from lm()
+
+```{r}
+penguins_lm_tidy <- tidy(penguins_lm)
+
+penguins_lm_tidy
+```
+
+### Use broom::glance() to get output of model fit and statistical significance
+
+```{r}
+penguins_lm_glance <- glance(penguins_lm)
+
+penguins_lm_glance
+```
+
+### use equatiomatic::extract_eq() to return the model in LaTeX
+
+```{r}
+extract_eq(model = penguins_lm, use_coefs = TRUE)
 ```
 
